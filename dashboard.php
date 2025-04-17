@@ -27,6 +27,10 @@ $user_groups = $groupObj->getUserGroups($user_id);
 
 // Get upcoming notifications
 $upcoming_notifications = $notificationObj->getUpcomingNotifications($user_id);
+
+// Get notification settings
+$notification_enabled = $_SESSION['notification_enabled'] ?? 1;
+$sound_enabled = $_SESSION['sound_enabled'] ?? 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,6 +50,7 @@ $upcoming_notifications = $notificationObj->getUpcomingNotifications($user_id);
                     <li><a href="dashboard.php">Dashboard</a></li>
                     <li><a href="groups.php">Prayer Groups</a></li>
                     <li><a href="notifications.php">Notifications</a></li>
+                    <li><a href="notification_settings.php">Notification Settings</a></li>
                     <li><a href="profile.php">Profile</a></li>
                     <li><a href="logout.php">Logout</a></li>
                 </ul>
@@ -151,8 +156,12 @@ $upcoming_notifications = $notificationObj->getUpcomingNotifications($user_id);
                     <?php if (!empty($user_groups)): ?>
                     <a href="create_notification.php" class="btn">Schedule Prayer</a>
                     <?php endif; ?>
+                    <a href="notification_settings.php" class="btn">Notification Settings</a>
                 </div>
             </div>
+            
+            <!-- Hidden element to store upcoming prayers data for JavaScript -->
+            <div id="upcoming-prayers-data" data-prayers='<?php echo json_encode($upcoming_notifications); ?>' style="display: none;"></div>
         </div>
     </main>
     
@@ -163,5 +172,6 @@ $upcoming_notifications = $notificationObj->getUpcomingNotifications($user_id);
     </footer>
     
     <script src="js/scripts.js"></script>
+    <script src="js/notifications.js"></script>
 </body>
 </html>
