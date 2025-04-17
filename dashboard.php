@@ -40,7 +40,7 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
     <title>Dashboard - Prayer Group Management</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body data-init-push-notifications="true">
     <header>
         <div class="container">
             <div class="navbar">
@@ -162,6 +162,9 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
             
             <!-- Hidden element to store upcoming prayers data for JavaScript -->
             <div id="upcoming-prayers-data" data-prayers='<?php echo json_encode($upcoming_notifications); ?>' style="display: none;"></div>
+            
+            <!-- Hidden element to store current user ID -->
+            <input type="hidden" id="current-user-id" value="<?php echo $user_id; ?>">
         </div>
     </main>
     
@@ -172,6 +175,7 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
     </footer>
     
     <script src="js/scripts.js"></script>
-    <script src="js/notifications.js"></script>
+    <script src="js/push-notifications.js"></script>
+    <script src="js/notification-sound.js"></script>
 </body>
 </html>

@@ -41,6 +41,9 @@ if (isPostRequest()) {
 // Get current settings
 $notification_enabled = $_SESSION['notification_enabled'] ?? 1;
 $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
+
+// Generate VAPID public key
+$vapidPublicKey = 'BLceySgRWmlwMO_3bVpJUuJaWx0YfO6vQkpNrZBFxb6-xCXy47j6SgKVYwXUkqBGyGHlsQDN1fObHKLhGDmi9pM';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -109,7 +112,7 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
         }
     </style>
 </head>
-<body>
+<body data-init-push-notifications="true">
     <header>
         <div class="container">
             <div class="navbar">
@@ -119,6 +122,7 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
                     <li><a href="dashboard.php">Dashboard</a></li>
                     <li><a href="groups.php">Prayer Groups</a></li>
                     <li><a href="notifications.php">Notifications</a></li>
+                    <li><a href="notification_settings.php">Notification Settings</a></li>
                     <li><a href="profile.php">Profile</a></li>
                     <li><a href="logout.php">Logout</a></li>
                 </ul>
@@ -149,8 +153,8 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
                     <form action="notification_settings.php" method="POST">
                         <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                             <div>
-                                <h3>Browser Notifications</h3>
-                                <p>Receive notifications before prayer times</p>
+                                <h3>Push Notifications</h3>
+                                <p>Receive instant notifications when prayers are scheduled</p>
                                 <p id="notification-permission-status" class="<?php echo $notification_enabled ? 'status-enabled' : 'status-disabled'; ?>">
                                     Checking permission...
                                 </p>
@@ -176,12 +180,13 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
                         </div>
                         
                         <div class="form-group">
-                            <h3>Notification Timing</h3>
-                            <p>You will receive notifications at the following times before scheduled prayers:</p>
+                            <h3>How Push Notifications Work</h3>
+                            <p>Push notifications allow you to receive instant alerts when:</p>
                             <ul>
-                                <li>10 minutes before prayer time</li>
-                                <li>5 minutes before prayer time</li>
+                                <li>A group leader schedules a new prayer time</li>
+                                <li>A prayer time is about to begin</li>
                             </ul>
+                            <p>These notifications will appear even when your browser is closed or you're not actively using the website.</p>
                         </div>
                         
                         <div class="form-group">
@@ -194,6 +199,12 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
             
             <!-- Hidden element to store upcoming prayers data for JavaScript -->
             <div id="upcoming-prayers-data" data-prayers='<?php echo json_encode($upcoming_notifications); ?>' style="display: none;"></div>
+            
+            <!-- Hidden element to store current user ID -->
+            <input type="hidden" id="current-user-id" value="<?php echo $user_id; ?>">
+            
+            <!-- Hidden element to store VAPID public key -->
+            <input type="hidden" id="vapid-public-key" value="<?php echo $vapidPublicKey; ?>">
         </div>
     </main>
     
@@ -204,23 +215,12 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
     </footer>
     
     <script src="js/scripts.js"></script>
-    <script src="js/notifications.js"></script>
+    <script src="js/push-notifications.js"></script>
+    <script src="js/notification-sound.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize notification settings
             initNotificationSettings();
-            
-            // Add event listener for test notification button
-            const testButton = document.getElementById('test-notification-btn');
-            if (testButton) {
-                testButton.addEventListener('click', function() {
-                    if (Notification.permission === "granted") {
-                        showTestNotification();
-                    } else {
-                        requestNotificationPermission();
-                    }
-                });
-            }
         });
     </script>
 </body>

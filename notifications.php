@@ -21,10 +21,6 @@ $notificationObj = new Notification();
 
 // Get all user notifications
 $notifications = $notificationObj->getUserNotifications($user_id);
-
-// Get notification settings
-$notification_enabled = $_SESSION['notification_enabled'] ?? 1;
-$sound_enabled = $_SESSION['sound_enabled'] ?? 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +40,6 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
                     <li><a href="dashboard.php">Dashboard</a></li>
                     <li><a href="groups.php">Prayer Groups</a></li>
                     <li><a href="notifications.php">Notifications</a></li>
-                    <li><a href="notification_settings.php">Notification Settings</a></li>
                     <li><a href="profile.php">Profile</a></li>
                     <li><a href="logout.php">Logout</a></li>
                 </ul>
@@ -102,9 +97,6 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
                 </div>
                 <?php endif; ?>
             </div>
-            
-            <!-- Hidden element to store upcoming prayers data for JavaScript -->
-            <div id="upcoming-prayers-data" data-prayers='<?php echo json_encode($notifications); ?>' style="display: none;"></div>
         </div>
     </main>
     
@@ -115,6 +107,5 @@ $sound_enabled = $_SESSION['sound_enabled'] ?? 1;
     </footer>
     
     <script src="js/scripts.js"></script>
-    <script src="js/notifications.js"></script>
 </body>
 </html>
